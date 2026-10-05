@@ -44,3 +44,36 @@ jobs:
             org.opencontainers.image.source=https://github.com/OpenCourant/ci-images
             org.opencontainers.image.description=OpenCourant Linux x86_64 build + QA environment (Rocky 8.10, gcc-toolset-11, OpenMPI 4.1.2)
             org.opencontainers.image.licenses=AGPL-3.0-or-later
+
+  # Same environment on aarch64 (the Dockerfile is arch-agnostic), built
+  # natively on an arm64 runner for OpenCourant linuxa64 builds.
+  linuxa64-bld-qa:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set date tag
+        run: echo "DATE_TAG=$(date +'%Y%m%d')" >> "$GITHUB_ENV"
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: linux64-bld-qa
+          push: true
+          tags: |
+            ghcr.io/opencourant/linuxa64-bld-qa:ompi4.1.2
+            ghcr.io/opencourant/linuxa64-bld-qa:ompi4.1.2-${{ env.DATE_TAG }}
+            ghcr.io/opencourant/linuxa64-bld-qa:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/OpenCourant/ci-images
+            org.opencontainers.image.description=OpenCourant Linux aarch64 build + QA environment (Rocky 8.10, gcc-toolset-11, OpenMPI 4.1.2)
+            org.opencontainers.image.licenses=AGPL-3.0-or-later
