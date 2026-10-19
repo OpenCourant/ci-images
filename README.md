@@ -1,5 +1,8 @@
 # OpenCourant CI images
 
+OpenCourant is an Incubator Project of the
+[Rocky Enterprise Software Foundation](https://www.resf.org).
+
 Container images used by OpenCourant CI, built from public sources and hosted
 in the OpenCourant GitHub namespace at `ghcr.io/opencourant`.
 
